@@ -28,18 +28,25 @@ class PagingDemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paging_demo)
 
-        adapter = BookPagedListAdapter(DIFF_CALLBACK)
-        rvBookList.layoutManager = LinearLayoutManager(this)
-        rvBookList.adapter = adapter
-
+        // Step 1: define data source
+        // Step 2: create data source factory for LivePagedListBuilder
         val type = intent.getStringExtra(DATA_TYPE)
         val factory = if (ITEM_KEYED == type) MyItemKeyedDataSourceFactory() else MyPageKeyedDataSourceFactory()
         title = type
 
+        // Setp 3: define a DiffUtil.ItemCallback
+        // Step 3.1: define PagedListAdapter and set to RecyclerView
+        adapter = BookPagedListAdapter(DIFF_CALLBACK)
+        rvBookList.layoutManager = LinearLayoutManager(this)
+        rvBookList.adapter = adapter
+
+        // Step 4: build PagedList.Config
+        // Step 4.1: config LivePagedListBuilder using elements created before
         val listBuilder = LivePagedListBuilder<Long, Book>(factory, PAGED_LIST_CONFIG)
                 .setFetchExecutor(Executors.newFixedThreadPool(5))
         val list = listBuilder.build()
 
+        // Step 5: register observer and listener
         swipeRefreshLayout.setOnRefreshListener {
             // invalidate the data liveDataSource will trigger the list to fetch new data
             factory.liveDataSource.value?.invalidate()
