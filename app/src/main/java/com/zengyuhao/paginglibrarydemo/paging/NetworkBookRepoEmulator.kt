@@ -8,7 +8,7 @@ import kotlin.math.roundToLong
 /**
  * @param latency in milliseconds
  * @param stability if latency=100, statbility=0.2 then delay = latency +/- (latency*stability) = 100 +/- 20 = [80, 120]
- * @param PLR Package Lost Rate from [0, 1]
+ * @param PLR Package Lost Rate in range [0, 1]
  */
 class NetworkBookRepoEmulator(
         private val latency: Long,
